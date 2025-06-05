@@ -1,5 +1,5 @@
 from products import Product
-
+from colors import RED, RESET
 
 class Store:
 
@@ -37,7 +37,7 @@ class Store:
 
         for product, quantity in shopping_list:
             if product not in self.list_of_products:
-                raise ValueError(f"Product {product.name} not found in store")
+                raise ValueError(f"{RED}Product {product.name} not found in store{RESET}")
 
             total_price += product.buy(quantity)
 

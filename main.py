@@ -1,16 +1,6 @@
 import products
 import store
-
-# Color definitions
-LIGHT_PURPLE = "\033[1;35m"
-BLINK = "\033[5m"
-RESET = "\033[0m"  # reset colors settings
-MENU = "\033[0;32m"  # green color
-ENT_TO_CONT = "\033[1;34m"  # light blue
-RED = "\033[0;31m"
-YELLOW = "\033[1;33m"
-
-
+from colors import *
 
 # setup initial stock of inventory
 list_of_products = [
@@ -23,11 +13,8 @@ my_store = store.Store(list_of_products)
 
 def show_menu():
     """Display the main menu of the store app"""
-    print("\nStore Menu")
-    print("1. List products")
-    print("2. Show total inventory")
-    print("3. Make order")
-    print("4. Quit")
+    print(f"{BLUE}\nStore Menu\n1. List products\n2. Show total inventory"
+          f"\n3. Make order\n4. Quit{RESET}")
 
 
 def list_products():
@@ -42,49 +29,54 @@ def list_products():
 def show_total_inventory():
     """Show total inventory of the store"""
     print("-" * 40)
-    print(f"\nTotal items in store: {my_store.get_total_quantity()}")
+    print(f"{GREEN}\nTotal items in store: {my_store.get_total_quantity()}{RESET}")
     print("-" * 40)
 
 
 def make_order():
     """Handle the order process"""
-    available_products = my_store.get_all_products()
-    list_products() # Shows available products
     shopping_list = []
 
     while True:
+        available_products = my_store.get_all_products()
+        list_products()  # Shows available products
+
         try:
-            user_input = input("\nWhich product # do you want? (or 'done' to finish").strip()
+            user_input = input("\nWhich product # do you want? (or 'done' to finish) ").strip()
             if user_input.lower() == 'done':
                 break
 
             product_index = int(user_input) - 1
             if product_index >= len(available_products) or product_index < 0:
-                print("Invalid input. Try again.")
+                print(f"{RED}Invalid input. Try again.{RESET}")
                 continue
 
             quantity = int(input("\nWhat amount do you want: "))
             if quantity <= 0:
-                print("Invalid amount.")
+                print(f"{RED}Invalid amount.{RESET}")
                 continue
 
             selected_product = available_products[product_index]
+            if quantity > selected_product.get_quantity():
+                print(f"{RED}Only {selected_product.get_quantity()} of {selected_product.name} left in stock.{RESET}")
+                continue
+
             shopping_list.append((selected_product, quantity))
-            print(f"Added {quantity} x {selected_product.name} to your order")
+            print(f"{YELLOW}Added {quantity} x {selected_product.name} to your order{RESET}")
 
         except ValueError:
-            print("Invalid input. Try again.")
+            print(f"{RED}Invalid input. Try again.{RESET}")
             continue
 
     if shopping_list:
         total = my_store.order(shopping_list)
         print("-" * 40)
-        print(f"Order successfully made, total cost: ${total:.2f}")
+        print(f"{YELLOW}Order successfully made, total cost: ${total:.2f}{RESET}")
         print("=" * 40 + "\n")
 
 def quit_app():
     """Exit the app"""
-    print("\nThank you for shopping with us!")
+    print(f"{GREEN}\nThank you for shopping with us!{RESET}")
     return False
 
 
@@ -108,7 +100,7 @@ def start():
                 break
 
         else:
-            print("Invalid input. Please enter a number between 1 and 4.")
+            print(f"{RED}Invalid input. Please enter a number between 1 and 4.{RESET}")
 
 
 
