@@ -3,8 +3,6 @@ from colors import RED, RESET
 
 class Store:
 
-    list_of_products = []
-
     def __init__(self, list_of_products):
         self.list_of_products = list_of_products
 

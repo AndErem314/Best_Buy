@@ -55,10 +55,6 @@ class Product:
             raise ValueError(f"{RED}Insufficient quantity available{RESET}")
 
         total_price = quantity * self.price
-        self.quantity -= quantity
-
-        # Deactivate product if quantity reaches 0
-        if self.quantity == 0:
-            self.deactivate()
+        self.set_quantity(self.quantity - quantity)
 
         return total_price

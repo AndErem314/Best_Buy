@@ -2,14 +2,6 @@ import products
 import store
 from colors import *
 
-# setup initial stock of inventory
-list_of_products = [
-    products.Product("MacBook Air M2", price=1450, quantity=100),
-    products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-    products.Product("Google Pixel 7", price=500, quantity=250)
-    ]
-
-my_store = store.Store(list_of_products)
 
 def show_menu():
     """Display the main menu of the store app"""
@@ -17,29 +9,29 @@ def show_menu():
           f"\n3. Make order\n4. Quit{RESET}")
 
 
-def list_products():
+def list_products(store):
     """Show all active products in the store use the enumerate method"""
     print("-" * 40)
     print("\nAll active Products:")
-    for i, product in enumerate(my_store.get_all_products(), 1):
+    for i, product in enumerate(store.get_all_products(), 1):
         print(f"{i}. {product.show()}")
     print("-" * 40)
 
 
-def show_total_inventory():
+def show_total_inventory(store):
     """Show total inventory of the store"""
     print("-" * 40)
-    print(f"{GREEN}\nTotal items in store: {my_store.get_total_quantity()}{RESET}")
+    print(f"{GREEN}\nTotal items in store: {store.get_total_quantity()}{RESET}")
     print("-" * 40)
 
 
-def make_order():
+def make_order(store):
     """Handle the order process"""
     shopping_list = []
 
     while True:
-        available_products = my_store.get_all_products()
-        list_products()  # Shows available products
+        available_products = store.get_all_products()
+        list_products(store)
 
         try:
             user_input = input("\nWhich product # do you want? (or 'done' to finish) ").strip()
@@ -69,7 +61,7 @@ def make_order():
             continue
 
     if shopping_list:
-        total = my_store.order(shopping_list)
+        total = store.order(shopping_list)
         print("-" * 40)
         print(f"{YELLOW}Order successfully made, total cost: ${total:.2f}{RESET}")
         print("=" * 40 + "\n")
@@ -80,12 +72,12 @@ def quit_app():
     return False
 
 
-def start():
+def start(store):
     """Initiate the store app using dispatch pattern"""
     dispatch_func = {
-        "1": list_products,
-        "2": show_total_inventory,
-        "3": make_order,
+        "1": lambda: list_products(store),
+        "2": lambda: show_total_inventory(store),
+        "3": lambda: make_order(store),
         "4": quit_app
 
     }
@@ -103,6 +95,11 @@ def start():
             print(f"{RED}Invalid input. Please enter a number between 1 and 4.{RESET}")
 
 
-
 if __name__ == "__main__":
-    start()
+    initial_products = [
+        products.Product("MacBook Air M2", price=1450, quantity=100),
+        products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+        products.Product("Google Pixel 7", price=500, quantity=250)
+    ]
+    my_store = store.Store(initial_products)
+    start(my_store)
